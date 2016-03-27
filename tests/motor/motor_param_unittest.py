@@ -119,6 +119,33 @@ class TestTachoMotorDutyCycleSpValue(ptc.ParameterizedTestCase):
         self._param['motor'].command = 'reset'
         self.assertEqual(self._param['motor'].duty_cycle_sp, 0)
 
+class TestTachoMotorEncoderPolarityValue(ptc.ParameterizedTestCase):
+
+    def test_encoder_polarity_normal_value(self):
+        self._param['motor'].encoder_polarity = 'normal'
+        self.assertEqual(self._param['motor'].encoder_polarity, 'normal')
+
+    def test_encoder_polarity_inversed_value(self):
+        self._param['motor'].encoder_polarity = 'inversed'
+        self.assertEqual(self._param['motor'].encoder_polarity, 'inversed')
+
+    def test_encoder_polarity_illegal_value(self):
+        with self.assertRaises(IOError):
+            self._param['motor'].encoder_polarity = "ThisShouldNotWork"
+
+    def test_encoder_polarity_after_reset(self):
+        if 'normal' == motor_info[self._param['motor'].driver_name]['encoder_polarity']:
+            self._param['motor'].encoder_polarity = 'inversed'
+        else:
+            self._param['motor'].encoder_polarity = 'normal'
+
+        self._param['motor'].command = 'reset'
+
+        if 'normal' == motor_info[self._param['motor'].driver_name]['encoder_polarity']:
+            self.assertEqual(self._param['motor'].encoder_polarity, 'normal')
+        else:
+            self.assertEqual(self._param['motor'].encoder_polarity, 'inversed')
+
 class TestTachoMotorMaxSpeedValue(ptc.ParameterizedTestCase):
 
     def test_max_speed_value(self):
@@ -200,12 +227,13 @@ class TestTachoMotorPolarityValue(ptc.ParameterizedTestCase):
             self._param['motor'].polarity = "ThisShouldNotWork"
 
     def test_polarity_after_reset(self):
-        if ('normal' == motor_info[self._param['motor'].driver_name]['polarity']):
+        if 'normal' == motor_info[self._param['motor'].driver_name]['polarity']:
             self._param['motor'].polarity = 'inversed'
         else:
             self._param['motor'].polarity = 'normal'
         self._param['motor'].command = 'reset'
-        if ('normal' == motor_info[self._param['motor'].driver_name]['polarity']):
+
+        if 'normal' == motor_info[self._param['motor'].driver_name]['polarity']:
             self.assertEqual(self._param['motor'].polarity, 'normal')
         else:
             self.assertEqual(self._param['motor'].polarity, 'inversed')
