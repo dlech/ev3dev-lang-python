@@ -3,22 +3,21 @@
 # Based on the parameterized  test case technique described here:
 #
 # http://eli.thegreenplace.net/2011/08/02/python-unit-testing-parametrized-test-cases
-
 import unittest
 import time
-import sys
 import ev3dev.ev3 as ev3
 
 import parameterizedtestcase as ptc
-
 from motor_info import motor_info
 
 class TestTachoMotorAddressValue(ptc.ParameterizedTestCase):
 
     def test_address_value(self):
+        # Use the class variable
         self.assertEqual(self._param['motor'].address, self._param['port'])
 
     def test_address_value_is_read_only(self):
+        # Use the class variable
         with self.assertRaises(AttributeError):
             self._param['motor'].address = "ThisShouldNotWork"
 
@@ -28,48 +27,36 @@ class TestTachoMotorCommandsValue(ptc.ParameterizedTestCase):
         self.assertTrue(self._param['motor'].commands == self._param['commands'])
 
     def test_commands_value_is_read_only(self):
+        # Use the class variable
         with self.assertRaises(AttributeError):
             self._param['motor'].commands = "ThisShouldNotWork"
 
 class TestTachoMotorCountPerRotValue(ptc.ParameterizedTestCase):
 
     def test_count_per_rot_value(self):
-        self.assertEqual(self._param['motor'].count_per_rot, motor_info[self._param['motor'].driver_name]['count_per_rot'])
+        # This is not available for linear motors - move to driver specific tests?
+        self.assertEqual(self._param['motor'].count_per_rot, 360)
 
     def test_count_per_rot_value_is_read_only(self):
+        # Use the class variable
         with self.assertRaises(AttributeError):
             self._param['motor'].count_per_rot = "ThisShouldNotWork"
-
-class TestTachoMotorCountPerMValue(ptc.ParameterizedTestCase):
-
-    def test_count_per_m_value(self):
-        self.assertEqual(self._param['motor'].count_per_m, motor_info[self._param['motor'].driver_name]['count_per_m'])
-
-    def test_count_per_m_value_is_read_only(self):
-        with self.assertRaises(AttributeError):
-            self._param['motor'].count_per_m = "ThisShouldNotWork"
-
-class TestTachoMotorFullTravelCountValue(ptc.ParameterizedTestCase):
-
-    def test_full_travel_count_value(self):
-        self.assertEqual(self._param['motor'].full_travel_count, motor_info[self._param['motor'].driver_name]['full_travel_count'])
-
-    def test_full_travel_count_value_is_read_only(self):
-        with self.assertRaises(AttributeError):
-            self._param['motor'].count_per_m = "ThisShouldNotWork"
 
 class TestTachoMotorDriverNameValue(ptc.ParameterizedTestCase):
 
     def test_driver_name_value(self):
+        # move to driver specific tests?
         self.assertEqual(self._param['motor'].driver_name, self._param['driver_name'])
 
     def test_driver_name_value_is_read_only(self):
+        # Use the class variable
         with self.assertRaises(AttributeError):
             self._param['motor'].driver_name = "ThisShouldNotWork"
 
 class TestTachoMotorDutyCycleValue(ptc.ParameterizedTestCase):
 
     def test_duty_cycle_value_is_read_only(self):
+        # Use the class variable
         with self.assertRaises(AttributeError):
             self._param['motor'].duty_cycle = "ThisShouldNotWork"
 
@@ -154,9 +141,11 @@ class TestTachoMotorEncoderPolarityValue(ptc.ParameterizedTestCase):
 class TestTachoMotorMaxSpeedValue(ptc.ParameterizedTestCase):
 
     def test_max_speed_value(self):
+        # This is not available for linear motors - move to driver specific tests?
         self.assertEqual(self._param['motor'].max_speed, motor_info[self._param['motor'].driver_name]['max_speed'])
 
     def test_max_speed_value_is_read_only(self):
+        # Use the class variable
         with self.assertRaises(AttributeError):
             self._param['motor'].max_speed = "ThisShouldNotWork"
 
@@ -176,6 +165,7 @@ class TestTachoMotorPositionPValue(ptc.ParameterizedTestCase):
 
     def test_position_p_after_reset(self):
         self._param['motor'].position_p = 1
+
         self._param['motor'].command = 'reset'
 
         if self._param['hold_pid']:
@@ -200,6 +190,7 @@ class TestTachoMotorPositionIValue(ptc.ParameterizedTestCase):
 
     def test_position_i_after_reset(self):
         self._param['motor'].position_i = 1
+
         self._param['motor'].command = 'reset'
 
         if self._param['hold_pid']:
@@ -224,6 +215,7 @@ class TestTachoMotorPositionDValue(ptc.ParameterizedTestCase):
 
     def test_position_d_after_reset(self):
         self._param['motor'].position_d = 1
+
         self._param['motor'].command = 'reset'
 
         if self._param['hold_pid']:
@@ -251,6 +243,7 @@ class TestTachoMotorPolarityValue(ptc.ParameterizedTestCase):
             self._param['motor'].polarity = 'inversed'
         else:
             self._param['motor'].polarity = 'normal'
+
         self._param['motor'].command = 'reset'
 
         if 'normal' == motor_info[self._param['motor'].driver_name]['polarity']:
@@ -285,6 +278,7 @@ class TestTachoMotorPositionValue(ptc.ParameterizedTestCase):
         self.assertEqual(self._param['motor'].position, 100)
         self._param['motor'].command = 'reset'
         self.assertEqual(self._param['motor'].position, 0)
+
 
 class TestTachoMotorPositionSpValue(ptc.ParameterizedTestCase):
 
@@ -341,7 +335,7 @@ class TestTachoMotorRampDownSpValue(ptc.ParameterizedTestCase):
         self.assertEqual(self._param['motor'].ramp_down_sp, 100)
         self._param['motor'].command = 'reset'
         self.assertEqual(self._param['motor'].ramp_down_sp, 0)
-
+        
 class TestTachoMotorRampUpSpValue(ptc.ParameterizedTestCase):
 
     def test_ramp_up_negative_value(self):
@@ -369,17 +363,18 @@ class TestTachoMotorRampUpSpValue(ptc.ParameterizedTestCase):
         self.assertEqual(self._param['motor'].ramp_up_sp, 100)
         self._param['motor'].command = 'reset'
         self.assertEqual(self._param['motor'].ramp_up_sp, 0)
-
+        
 class TestTachoMotorSpeedValue(ptc.ParameterizedTestCase):
 
     def test_speed_value_is_read_only(self):
+        # Use the class variable
         with self.assertRaises(AttributeError):
             self._param['motor'].speed = 1
 
     def test_speed_value_after_reset(self):
         self._param['motor'].command = 'reset'
         self.assertEqual(self._param['motor'].speed, 0)
-
+        
 class TestTachoMotorSpeedSpValue(ptc.ParameterizedTestCase):
 
    def test_speed_sp_large_negative(self):
@@ -411,11 +406,11 @@ class TestTachoMotorSpeedSpValue(ptc.ParameterizedTestCase):
             self._param['motor'].speed_sp = motor_info[self._param['motor'].driver_name]['max_speed'] + 1
 
    def test_speed_sp_after_reset(self):
-        self._param['motor'].speed_sp = motor_info[self._param['motor'].driver_name]['max_speed']/2
-        self.assertEqual(self._param['motor'].speed_sp, motor_info[self._param['motor'].driver_name]['max_speed']/2)
+        self._param['motor'].speed_sp = 100
+        self.assertEqual(self._param['motor'].speed_sp, 100)
         self._param['motor'].command = 'reset'
         self.assertEqual(self._param['motor'].speed_sp, 0)
-
+        
 class TestTachoMotorSpeedPValue(ptc.ParameterizedTestCase):
 
     def test_speed_i_negative(self):
@@ -432,6 +427,7 @@ class TestTachoMotorSpeedPValue(ptc.ParameterizedTestCase):
 
     def test_speed_p_after_reset(self):
         self._param['motor'].speed_p = 1
+
         self._param['motor'].command = 'reset'
 
         if self._param['speed_pid']:
@@ -456,6 +452,7 @@ class TestTachoMotorSpeedIValue(ptc.ParameterizedTestCase):
 
     def test_speed_i_after_reset(self):
         self._param['motor'].speed_i = 1
+
         self._param['motor'].command = 'reset'
 
         if self._param['speed_pid']:
@@ -480,6 +477,7 @@ class TestTachoMotorSpeedDValue(ptc.ParameterizedTestCase):
 
     def test_speed_d_after_reset(self):
         self._param['motor'].speed_d = 1
+
         self._param['motor'].command = 'reset'
 
         if self._param['speed_pid']:
@@ -491,6 +489,7 @@ class TestTachoMotorSpeedDValue(ptc.ParameterizedTestCase):
 class TestTachoMotorStateValue(ptc.ParameterizedTestCase):
 
     def test_state_value_is_read_only(self):
+        # Use the class variable
         with self.assertRaises(AttributeError):
             self._param['motor'].state = 'ThisShouldNotWork'
 
@@ -498,7 +497,9 @@ class TestTachoMotorStateValue(ptc.ParameterizedTestCase):
         self._param['motor'].command = 'reset'
         self.assertEqual(self._param['motor'].state, [])
 
-class TestTachoMotorStopActionValue(ptc.ParameterizedTestCase):
+#    def test_stop_action_value(self):
+#        self.assertEqual(self._param['motor'].stop_action, 'coast')
+class TestTachoMotorStopCommandValue(ptc.ParameterizedTestCase):
 
     def test_stop_action_illegal(self):
         with self.assertRaises(IOError):
@@ -534,15 +535,16 @@ class TestTachoMotorStopActionValue(ptc.ParameterizedTestCase):
         if len(self._param['stop_actions']) < 2:
             action = 0
         self._param['motor'].stop_action = self._param['stop_actions'][action]
-        self._param['motor'].action = 'reset'
+        self._param['motor'].command = 'reset'
         self.assertEqual(self._param['motor'].stop_action, self._param['stop_actions'][0])
 
-class TestTachoMotorStopActionsValue(ptc.ParameterizedTestCase):
+class TestTachoMotorStopCommandsValue(ptc.ParameterizedTestCase):
 
     def test_stop_actions_value(self):
         self.assertTrue(self._param['motor'].stop_actions == self._param['stop_actions'])
 
     def test_stop_actions_value_is_read_only(self):
+        # Use the class variable
         with self.assertRaises(AttributeError):
             self._param['motor'].stop_actions = "ThisShouldNotWork"
 
@@ -635,20 +637,15 @@ suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorStopCommandVa
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorStopCommandsValue, param=paramsA))
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorTimeSpValue, param=paramsA))
 
+
 if __name__ == '__main__':
-     for k in motor_info:
-        file = open('/sys/class/lego-port/port4/set_device', 'w')
-        file.write('{0}\n'.format(k))
-        file.close()
-        time.sleep(0.5)
+    unittest.TextTestRunner(verbosity=1,buffer=True ).run(suite)
 
-        params = { 'motor': ev3.Motor('outA'), 'port': 'outA', 'driver_name': k }
+exit()
 
-        suite = unittest.TestSuite()
+# Move these up later
 
-        AddTachoMotorParameterTestsToSuite( suite, k, params )
-        print( '-------------------- TESTING {0} --------------'.format(k))
-        unittest.TextTestRunner(verbosity=1,buffer=True ).run(suite)
+class TestMotorRelativePosition(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -666,13 +663,13 @@ if __name__ == '__main__':
 
     @unittest.skip("Skipping coast mode - always fails")
     def test_stop_coast(self):
-        self._motor.stop_command = 'coast'
+        self._motor.stop_action = 'coast'
         self._motor.command = 'run-to-rel-pos'
         time.sleep(1)
         self.assertGreaterEqual(1, abs(self._motor.position - self._motor.position_sp))
 
     def test_stop_brake(self):
-        self._motor.stop_command = 'brake'
+        self._motor.stop_action = 'brake'
         self._motor.position = 0
 
         for i in range(1,5):
@@ -682,7 +679,7 @@ if __name__ == '__main__':
             self.assertGreaterEqual(8, abs(self._motor.position - (i * self._motor.position_sp)))
 
     def test_stop_hold(self):
-        self._motor.stop_command = 'hold'
+        self._motor.stop_action = 'hold'
         self._motor.position = 0
 
         for i in range(1,5):
