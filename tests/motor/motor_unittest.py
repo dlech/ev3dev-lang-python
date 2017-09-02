@@ -168,7 +168,7 @@ class TestTachoMotorPositionPValue(ptc.ParameterizedTestCase):
 
         self._param['motor'].command = 'reset'
 
-        if self._param.has_key('hold_pid'):
+        if 'hold_pid' in self._param:
             expected = self._param['hold_pid']['kP']
         else:
              expected = motor_info[self._param['motor'].driver_name]['position_p']
@@ -193,7 +193,7 @@ class TestTachoMotorPositionIValue(ptc.ParameterizedTestCase):
 
         self._param['motor'].command = 'reset'
 
-        if self._param.has_key('hold_pid'):
+        if 'hold_pid' in self._param:
             expected = self._param['hold_pid']['kI']
         else:
              expected = motor_info[self._param['motor'].driver_name]['position_i']
@@ -218,7 +218,7 @@ class TestTachoMotorPositionDValue(ptc.ParameterizedTestCase):
 
         self._param['motor'].command = 'reset'
 
-        if self._param.has_key('hold_pid'):
+        if 'hold_pid' in self._param:
             expected = self._param['hold_pid']['kD']
         else:
              expected = motor_info[self._param['motor'].driver_name]['position_d']
@@ -430,7 +430,7 @@ class TestTachoMotorSpeedPValue(ptc.ParameterizedTestCase):
 
         self._param['motor'].command = 'reset'
 
-        if self._param.has_key('speed_pid'):
+        if 'speed_pid' in self._param:
             expected = self._param['speed_pid']['kP']
         else:
              expected = motor_info[self._param['motor'].driver_name]['speed_p']
@@ -455,7 +455,7 @@ class TestTachoMotorSpeedIValue(ptc.ParameterizedTestCase):
 
         self._param['motor'].command = 'reset'
 
-        if self._param.has_key('speed_pid'):
+        if 'speed_pid' in self._param:
             expected = self._param['speed_pid']['kI']
         else:
              expected = motor_info[self._param['motor'].driver_name]['speed_i']
@@ -480,7 +480,7 @@ class TestTachoMotorSpeedDValue(ptc.ParameterizedTestCase):
 
         self._param['motor'].command = 'reset'
 
-        if self._param.has_key('speed_pid'):
+        if 'speed_pid' in self._param:
             expected = self._param['speed_pid']['kD']
         else:
              expected = motor_info[self._param['motor'].driver_name]['speed_d']
@@ -675,7 +675,7 @@ class TestMotorRelativePosition(unittest.TestCase):
         for i in range(1,5):
             self._motor.command = 'run-to-rel-pos'
             time.sleep(1)
-            print self._motor.position
+            print(self._motor.position)
             self.assertGreaterEqual(8, abs(self._motor.position - (i * self._motor.position_sp)))
 
     def test_stop_hold(self):
@@ -685,7 +685,7 @@ class TestMotorRelativePosition(unittest.TestCase):
         for i in range(1,5):
             self._motor.command = 'run-to-rel-pos'
             time.sleep(1)
-            print self._motor.position
+            print(self._motor.position)
             self.assertGreaterEqual(1, abs(self._motor.position - (i * self._motor.position_sp)))
 
 
