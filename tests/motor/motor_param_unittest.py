@@ -593,62 +593,6 @@ suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorStopCommandVa
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorStopCommandsValue, param=paramsA))
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorTimeSpValue, param=paramsA))
 
-if __name__ == '__main__':
-     for k in motor_info:
-        file = open('/sys/class/lego-port/port4/set_device', 'w')
-        file.write('{0}\n'.format(k))
-        file.close()
-        time.sleep(0.5)
-
-        params = { 'motor': ev3.Motor('outA'), 'port': 'outA', 'driver_name': k }
-
-        suite = unittest.TestSuite()
-
-        AddTachoMotorParameterTestsToSuite( suite, k, params )
-        print( '-------------------- TESTING {0} --------------'.format(k))
-        unittest.TextTestRunner(verbosity=1,buffer=True ).run(suite)
-
-    @classmethod
-    def setUpClass(cls):
-        cls._motor = ev3.Motor('outA')
-        cls._motor.speed_sp = 400
-        cls._motor.ramp_up_sp = 300
-        cls._motor.ramp_down_sp = 300
-        cls._motor.position = 0
-        cls._motor.position_sp = 180
-        pass
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-    @unittest.skip("Skipping coast mode - always fails")
-    def test_stop_coast(self):
-        self._motor.stop_command = 'coast'
-        self._motor.command = 'run-to-rel-pos'
-        time.sleep(1)
-        self.assertGreaterEqual(1, abs(self._motor.position - self._motor.position_sp))
-
-    def test_stop_brake(self):
-        self._motor.stop_command = 'brake'
-        self._motor.position = 0
-
-        for i in range(1,5):
-            self._motor.command = 'run-to-rel-pos'
-            time.sleep(1)
-            print self._motor.position
-            self.assertGreaterEqual(8, abs(self._motor.position - (i * self._motor.position_sp)))
-
-    def test_stop_hold(self):
-        self._motor.stop_command = 'hold'
-        self._motor.position = 0
-
-        for i in range(1,5):
-            self._motor.command = 'run-to-rel-pos'
-            time.sleep(1)
-            print self._motor.position
-            self.assertGreaterEqual(1, abs(self._motor.position - (i * self._motor.position_sp)))
-
 
 if __name__ == '__main__':
     unittest.main(verbosity=2,buffer=True ).run(suite)
