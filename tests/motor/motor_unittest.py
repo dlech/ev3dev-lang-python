@@ -100,43 +100,6 @@ class TestTachoMotorDutyCycleSpValue(ptc.ParameterizedTestCase):
         self._param['motor'].command = 'reset'
         self.assertEqual(self._param['motor'].duty_cycle_sp, 0)
 
-class TestTachoMotorEncoderPolarityValue(ptc.ParameterizedTestCase):
-
-    def test_encoder_polarity_normal_value(self):
-        if self._param['supports_encoder_polarity']:
-            self._param['motor'].encoder_polarity = 'normal'
-            self.assertEqual(self._param['motor'].encoder_polarity, 'normal')
-        else:
-            with self.assertRaises(IOError):
-                self._param['motor'].encoder_polarity = 'normal'
-
-    def test_encoder_polarity_inversed_value(self):
-        if self._param['supports_encoder_polarity']:
-            self._param['motor'].encoder_polarity = 'inversed'
-            self.assertEqual(self._param['motor'].encoder_polarity, 'inversed')
-        else:
-            with self.assertRaises(IOError):
-                self._param['motor'].encoder_polarity = 'inversed'
-
-    def test_encoder_polarity_illegal_value(self):
-        with self.assertRaises(IOError):
-            self._param['motor'].encoder_polarity = "ThisShouldNotWork"
-
-    def test_encoder_polarity_after_reset(self):
-        if not self._param['supports_encoder_polarity']:
-            self.skipTest('brake not supported by this motor controller')
-
-        if 'normal' == motor_info[self._param['motor'].driver_name]['encoder_polarity']:
-            self._param['motor'].encoder_polarity = 'inversed'
-        else:
-            self._param['motor'].encoder_polarity = 'normal'
-
-        self._param['motor'].command = 'reset'
-
-        if 'normal' == motor_info[self._param['motor'].driver_name]['encoder_polarity']:
-            self.assertEqual(self._param['motor'].encoder_polarity, 'normal')
-        else:
-            self.assertEqual(self._param['motor'].encoder_polarity, 'inversed')
 
 class TestTachoMotorMaxSpeedValue(ptc.ParameterizedTestCase):
 
@@ -577,7 +540,6 @@ ev3_params = {
     'driver_name': 'lego-ev3-l-motor',
     'commands': ['run-forever', 'run-to-abs-pos', 'run-to-rel-pos', 'run-timed', 'run-direct', 'stop', 'reset'],
     'stop_actions': ['coast', 'brake', 'hold'],
-    'supports_encoder_polarity': True,
 }
 evb_params = {
     'motor': ev3.Motor('evb-ports:outA'),
@@ -585,7 +547,6 @@ evb_params = {
     'driver_name': 'lego-ev3-l-motor',
     'commands': ['run-forever', 'run-to-abs-pos', 'run-to-rel-pos', 'run-timed', 'run-direct', 'stop', 'reset'],
     'stop_actions': ['coast', 'brake', 'hold'],
-    'supports_encoder_polarity': True,
 }
 brickpi_params = {
     'motor': ev3.Motor('ttyAMA0:MA'),
@@ -593,7 +554,6 @@ brickpi_params = {
     'driver_name': 'lego-nxt-motor',
     'commands': ['run-forever', 'run-to-abs-pos', 'run-to-rel-pos', 'run-timed', 'run-direct', 'stop', 'reset'],
     'stop_actions': ['coast', 'hold'],
-    'supports_encoder_polarity': False,
     'speed_pid': { 'kP': 1000, 'kI': 60, 'kD': 0 },
     'hold_pid': { 'kP': 20000, 'kI': 0, 'kD': 0 },
 }
@@ -603,7 +563,6 @@ pistorms_params = {
     'driver_name': 'lego-nxt-motor',
     'commands': ['run-forever', 'run-to-abs-pos', 'run-to-rel-pos', 'run-timed', 'stop', 'reset'],
     'stop_actions': ['coast', 'brake', 'hold'],
-    'supports_encoder_polarity': False,
     'speed_pid': { 'kP': 1000, 'kI': 60, 'kD': 0 },
     'hold_pid': { 'kP': 20000, 'kI': 0, 'kD': 0 },
 }
@@ -617,7 +576,6 @@ suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorCommandsValue
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorCountPerRotValue, param=paramsA))
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorDriverNameValue, param=paramsA))
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorDutyCycleSpValue, param=paramsA))
-suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorEncoderPolarityValue, param=paramsA))
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorMaxSpeedValue, param=paramsA))
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorPositionPValue, param=paramsA))
 suite.addTest(ptc.ParameterizedTestCase.parameterize(TestTachoMotorPositionIValue, param=paramsA))
